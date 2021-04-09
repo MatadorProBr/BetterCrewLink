@@ -8,8 +8,8 @@ import { format as formatUrl } from 'url';
 import './hook';
 import { overlayWindow } from 'electron-overlay-window';
 import { initializeIpcHandlers, initializeIpcListeners } from './ipc-handlers';
-import { IpcRendererMessages } from '../common/ipc-messages';
-import { ProgressInfo } from 'builder-util-runtime';
+// import { IpcRendererMessages } from '../common/ipc-messages';
+// import { ProgressInfo } from 'builder-util-runtime';
 
 const args = require('minimist')(process.argv);
 
@@ -161,46 +161,46 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
 	app.quit();
 } else {
-	autoUpdater.checkForUpdates();
-	autoUpdater.on('update-available', () => {
-		try {
-			global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
-				state: 'available',
-			});
-		} catch (e) {}
-	});
-	autoUpdater.on('error', (err: string) => {
-		try {
-			global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
-				state: 'error',
-				error: err,
-			});
-		} catch (e) {
-			/*empty*/
-		}
-	});
-	autoUpdater.on('download-progress', (progress: ProgressInfo) => {
-		try {
-			global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
-				state: 'downloading',
-				progress,
-			});
-		} catch (e) {
-			/*empty*/
-		}
-	});
-	autoUpdater.on('update-downloaded', () => {
-		try {
-			global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
-				state: 'downloaded',
-			});
-		} catch (e) {
-			/*empty*/
-		}
+	// autoUpdater.checkForUpdates();
+	// autoUpdater.on('update-available', () => {
+	// 	try {
+	// 		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
+	// 			state: 'available',
+	// 		});
+	// 	} catch (e) {}
+	// });
+	// autoUpdater.on('error', (err: string) => {
+	// 	try {
+	// 		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
+	// 			state: 'error',
+	// 			error: err,
+	// 		});
+	// 	} catch (e) {
+	// 		/*empty*/
+	// 	}
+	// });
+	// autoUpdater.on('download-progress', (progress: ProgressInfo) => {
+	// 	try {
+	// 		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
+	// 			state: 'downloading',
+	// 			progress,
+	// 		});
+	// 	} catch (e) {
+	// 		/*empty*/
+	// 	}
+	// });
+	// autoUpdater.on('update-downloaded', () => {
+	// 	try {
+	// 		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
+	// 			state: 'downloaded',
+	// 		});
+	// 	} catch (e) {
+	// 		/*empty*/
+	// 	}
 
-		app.relaunch();
-		autoUpdater.quitAndInstall();
-	});
+	// 	app.relaunch();
+	// 	autoUpdater.quitAndInstall();
+	// });
 
 	// Mock auto-update download
 	// setTimeout(() => {
