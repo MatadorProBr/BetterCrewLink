@@ -7,8 +7,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import './css/overlay.css';
 import Avatar from './Avatar';
 import { ISettings } from '../common/ISettings';
-import VolumeOff from '@material-ui/icons/VolumeOff';
-import MicOff from '@material-ui/icons/MicOff';
+
 
 interface UseStylesProps {
 	hudHeight: number;
@@ -79,6 +78,7 @@ const playerColors = [
 const iPadRatio = 854 / 579;
 
 const Overlay: React.FC = function () {
+	
 	const [gameState, setGameState] = useState<AmongUsState>((undefined as unknown) as AmongUsState);
 	const [voiceState, setVoiceState] = useState<VoiceState>((undefined as unknown) as VoiceState);
 	const [settings, setSettings] = useState<ISettings>((undefined as unknown) as ISettings);
@@ -140,7 +140,7 @@ const AvatarOverlay: React.FC<AvatarOverlayProps> = ({
 
 	const avatars: JSX.Element[] = [];
 	const isOnSide = positionParse == 'right' || positionParse == 'left';
-	const showName = isOnSide && !compactOverlay;
+	const showName = isOnSide && (!compactOverlay || position === 'right1' || position === 'left1');
 	const classnames: string[] = ['overlay-wrapper'];
 	if (gameState.gameState == GameState.UNKNOWN || gameState.gameState == GameState.MENU) {
 		classnames.push('gamestate_menu');
@@ -229,9 +229,9 @@ const AvatarOverlay: React.FC<AvatarOverlayProps> = ({
 					<div className="players_container playerContainerBack">{avatars}</div>
 				</div>
 			</div>
-			{(voiceState.muted || voiceState.deafened) && (
+			{/* {(voiceState.muted || voiceState.deafened) && (
 				<div className="volumeicons">{voiceState.deafened ? <VolumeOff /> : <MicOff />}</div>
-			)}
+			)} */}
 		</div>
 	);
 };
