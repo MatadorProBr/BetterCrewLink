@@ -41,6 +41,7 @@ import adapter from 'webrtc-adapter';
 import { VADOptions } from './vad';
 import { pushToTalkOptions } from './settings/SettingsStore';
 import { poseCollide } from '../common/ColliderMap';
+import { ErrorInstance, stringToError } from '../common/Errors';
 
 console.log(adapter.browserDetails.browser);
 
@@ -122,7 +123,7 @@ const DEFAULT_ICE_CONFIG_TURN: RTCConfiguration = {
 
 export interface VoiceProps {
 	t: (key: string) => string;
-	error: string;
+	error: ErrorInstance;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -215,7 +216,7 @@ radioOnAudio.volume = 0.02;
 // radiobeepAudio2.volume = 0.2;
 
 const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceProps) {
-	const [error, setError] = useState('');
+	const [error, setError] = useState<ErrorInstance>(undefined as unknown as ErrorInstance);
 	const [settings, setSetting] = useContext(SettingsContext);
 
 	const settingsRef = useRef<ISettings>(settings);
@@ -766,7 +767,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 
 		socket.on('error', (error: SocketError) => {
 			if (error.message) {
-				setError(error.message);
+				setError(stringToError(error.message));
 			}
 			console.error('socketIO error:', error);
 			currentLobby = 'MENU';
@@ -1121,7 +1122,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 		},
 		(error) => {
 			console.error(error);
-			setError("Couldn't connect to your microphone:\n" + error);
+			setError(stringToError("Couldn't connect to your microphone:\n" + error));
 			// ipcRenderer.send(IpcMessages.SHOW_ERROR_DIALOG, {
 			// 	title: 'Error',
 			// 	content: 'Couldn\'t connect to your microphone:\n' + error
@@ -1335,7 +1336,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 						ERROR
 					</Typography>
 					<Typography align="center" style={{ whiteSpace: 'pre-wrap' }}>
-						{error}
+						{error.err_message}
 						{initialError}
 					</Typography>
 					<SupportLink />

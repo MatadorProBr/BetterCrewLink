@@ -4,6 +4,7 @@ import { keyboardWatcher } from 'node-keyboard-watcher';
 import Store from 'electron-store';
 import { ISettings } from '../common/ISettings';
 import { IpcHandlerMessages, IpcMessages, IpcRendererMessages, IpcSyncMessages } from '../common/ipc-messages';
+import { ErrorInstance } from '../common/Errors';
 
 const store = new Store<ISettings>();
 
@@ -115,13 +116,14 @@ ipcMain.handle(IpcHandlerMessages.START_HOOK, async (event) => {
 		const frame = async () => {
 			const err = await gameReader.loop();
 			if (err) {
+				console.log(`Error is: ${err.err_message}`);
 				// readingGame = false;
 				gotError = true;
 				event.sender.send(IpcRendererMessages.ERROR, err);
 				setTimeout(frame, 7500);
 			} else {
 				if (gotError) {
-					event.sender.send(IpcRendererMessages.ERROR, '');
+					event.sender.send(IpcRendererMessages.ERROR, undefined as unknown as ErrorInstance);
 					gotError = false;
 				}
 

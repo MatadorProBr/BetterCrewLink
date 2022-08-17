@@ -17,7 +17,7 @@ import Struct from 'structron';
 import { IpcOverlayMessages, IpcRendererMessages } from '../common/ipc-messages';
 import { GameState, AmongUsState, Player } from '../common/AmongUsState';
 import { fetchOffsetLookup, fetchOffsets, IOffsets, IOffsetsLookup } from './offsetStore';
-import Errors from '../common/Errors';
+import { ErrorInstance, stringToError } from '../common/Errors';
 import { CameraLocation, MapType } from '../common/AmongusMap';
 import { GenerateAvatars, numberToColorHex } from './avatarGenerator';
 import { RainbowColorId } from '../renderer/cosmetics';
@@ -105,11 +105,7 @@ export default class GameReader {
 					break;
 				} catch (e) {
 					console.log('ERROR:', e);
-					if (processOpen && String(e) === 'Error: unable to find process') {
-						error = Errors.OPEN_AS_ADMINISTRATOR;
-					} else {
-						error = String(e);
-					}
+					error = String(e);
 					this.amongUs = null;
 				}
 			}
@@ -147,14 +143,14 @@ export default class GameReader {
 
 	checkProcessDelay = 0;
 	isLocalGame = false;
-	async loop(): Promise<string | null> {
+	async loop(): Promise<ErrorInstance | null> {
 		if (this.checkProcessDelay-- <= 0) {
 			this.checkProcessDelay = 30;
 			try {
 				await this.checkProcessOpen();
 			} catch (e) {
 				this.checkProcessDelay = 0
-				return String(e);
+				return stringToError(String(e));
 			}
 		}
 		if (

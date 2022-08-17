@@ -37,6 +37,7 @@ import { DEFAULT_PLAYERCOLORS } from '../main/avatarGenerator';
 import './language/i18n';
 import { withNamespaces } from 'react-i18next';
 import { ISettings } from '../common/ISettings';
+import { ErrorInstance, stringToError } from '../common/Errors';
 
 
 declare module '@mui/styles/defaultTheme' {
@@ -130,7 +131,7 @@ export default function App({ t }): JSX.Element {
 	const [gameState, setGameState] = useState<AmongUsState>({} as AmongUsState);
 	const [settingsOpen, setSettingsOpen] = useState(false);
 	const [diaOpen, setDiaOpen] = useState(true);
-	const [error, setError] = useState('');
+	const [error, setError] = useState<ErrorInstance>((undefined as unknown) as ErrorInstance);
 	const [updaterState, setUpdaterState] = useState<AutoUpdaterState>({
 		state: 'unavailable',
 	});
@@ -157,7 +158,7 @@ export default function App({ t }): JSX.Element {
 			setGameState(newState);
 		};
 
-		const onError = (_: Electron.IpcRendererEvent, error: string) => {
+		const onError = (_: Electron.IpcRendererEvent, error: ErrorInstance) => {
 			shouldInit = false;
 			setError(error);
 		};
@@ -185,7 +186,7 @@ export default function App({ t }): JSX.Element {
 			.catch((error: Error) => {
 				if (shouldInit) {
 					shouldInit = false;
-					setError(error.message);
+					setError(stringToError(error.message));
 				}
 			});
 		ipcRenderer.on(IpcRendererMessages.AUTO_UPDATER_STATE, onAutoUpdaterStateChange);

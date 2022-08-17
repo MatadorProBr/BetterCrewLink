@@ -5,6 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import SupportLink from './SupportLink';
 import LaunchButton from './LaunchButton';
+import { ErrorInstance } from '../common/Errors';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 export interface MenuProps {
 	t: (key: string) => string;
-	error: string;
+	error: ErrorInstance;
 }
 
 const Menu: React.FC<MenuProps> = function ({ t, error }: MenuProps) {
@@ -50,7 +51,7 @@ const Menu: React.FC<MenuProps> = function ({ t, error }: MenuProps) {
 							{t('game.error')}
 						</Typography>
 						<Typography align="center" style={{ whiteSpace: 'pre-wrap' }}>
-							{error}
+							{error.err_message}
 						</Typography>
 						<SupportLink />
 					</div>
