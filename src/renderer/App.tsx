@@ -258,7 +258,10 @@ export default function App({ t }): JSX.Element {
 											</>
 										)}
 										{updaterState.state === 'error' && (
-											<DialogContentText color="error">{String(updaterState.error)}</DialogContentText>
+											<>
+												<DialogContentText>Auto-update failed</DialogContentText>
+												<DialogContentText color="error">{String(updaterState.error).replace(/\r?\n/,'')}</DialogContentText>
+											</>
 										)}
 									</DialogContent>
 									{updaterState.state === 'error' && (
@@ -269,7 +272,7 @@ export default function App({ t }): JSX.Element {
 													shell.openExternal("https://github.com/OhMyGuus/BetterCrewLink/releases/latest");
 												}}
 											>
-												Download Manually
+												Check Manually
 											</Button>
 											<Button
 												color="grey"
@@ -277,7 +280,7 @@ export default function App({ t }): JSX.Element {
 													setDiaOpen(false);
 												}}
 											>
-												Skip
+												Ignore
 											</Button>
 										</DialogActions>
 									)}
